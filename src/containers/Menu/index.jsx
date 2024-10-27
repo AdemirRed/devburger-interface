@@ -13,7 +13,7 @@ export function Menu() {
                     HAMBURGER
                     <br />
                     ESTÁ AQUI
-                <span>Esse cardápio está  irresistível!</span>
+                <span>Esse cardápio está irresistível!</span>
                 </h1>
             </Banner>
             <CategoryMenu>
