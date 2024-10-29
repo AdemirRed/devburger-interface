@@ -16,10 +16,12 @@ import * as yup from "yup";
 import { toast } from "react-toastify";
 import { api } from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../hooks/UserContext";
 
 
 export function Login() {
     const navigate = useNavigate();
+    const { putUserData } = useUser()
 
     const schema = yup.object({
         email: yup.string()
@@ -48,7 +50,7 @@ export function Login() {
     
         try {
             
-            const { data: {token}, status  } = await api.post('/session', {
+            const { data: userData, status  } = await api.post('/session', {
                 email: data.email,
                 password: data.password,
                 
@@ -64,14 +66,16 @@ export function Login() {
                 setTimeout(() => {
                     navigate('/');
                 }, 2000);
-                localStorage.setItem('token', token)
+
+                putUserData(userData)
+
+               // localStorage.setItem('token', token)
                 toast.success('Seja Bem-vindo(a) 🤌🏼')
             }else if(status === 401){
                 toast.error('Email ou senha Incorretos! 🤯')
             }else{
                 throw new Error()
             }
-            console.log(token);
             
         } catch (error) {
             toast.error('😢 Falha no Sistema! Tente novamente')
