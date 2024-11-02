@@ -1,40 +1,55 @@
-import { Container, 
-    HeaderLink, 
-    LinkContainer, 
-    Logout, 
-    Navigation, 
-    Options, 
+import {
+    Container,
+    HeaderLink,
+    LinkContainer,
+    Logout,
+    Navigation,
+    Options,
     Profile,
     Content
 } from "./styles";
 
-import { UserCircle, ShoppingCart } from "@phosphor-icons/react"; 
+import { UserCircle, ShoppingCart } from "@phosphor-icons/react";
+import { useNavigate, useResolvedPath } from "react-router-dom";
+import { useUser } from '../../hooks/UserContext'
 
 export function Header() {
+    const navigate = useNavigate()
+    const { pathname } = useResolvedPath()
+
+    //Função para a desconexão do usuario
+    const { logout, userInfo } = useUser()
+    function logoutUser() {
+        logout()
+        navigate('/login')
+
+    }
+
     return (
         <Container>
             <Content>
-            <Navigation>
-                <div>
-                    <HeaderLink>Home</HeaderLink>
-                    <HeaderLink>Cardápio</HeaderLink>
-                </div>
-            </Navigation>
-            <Options>
-                <Profile>
-                    <UserCircle color="#fff" size={24}/>
+                <Navigation>
                     <div>
-                        <p>
-                            Olá, <span>Ademir</span>
-                        </p>
-                        <Logout>Sair</Logout>
+                        <HeaderLink to='/' $isActive={pathname === '/'}>Home</HeaderLink>
+                        <hr></hr>
+                        <HeaderLink to='/cardapio' $isActive={pathname === '/cardapio'}>Cardápio</HeaderLink>
                     </div>
-                </Profile>
-            <LinkContainer>
-                <ShoppingCart color="#fff" size={24}/>
-                <HeaderLink>Carrinho</HeaderLink>
-            </LinkContainer>
-            </Options>
+                </Navigation>
+                <Options>
+                    <Profile>
+                        <UserCircle color="#fff" size={24} />
+                        <div>
+                            <p>
+                                Olá, <span>{userInfo.name}</span>
+                            </p>
+                            <Logout onClick={logoutUser}>Sair</Logout>
+                        </div>
+                    </Profile>
+                    <LinkContainer>
+                        <ShoppingCart color="#fff" size={24} />
+                        <HeaderLink to='/carrinho'>Carrinho</HeaderLink>
+                    </LinkContainer>
+                </Options>
             </Content>
         </Container>
     )
